@@ -20,80 +20,80 @@ LABEL maintainer="ACAVJW4H" \
   org.opencontainers.image.licenses="MIT"
 
 RUN apk --update --no-cache add \
-    bash \
-    ca-certificates \
-    curl \
-    ffmpeg \
-    imagemagick \
-    libressl \
-    libsmbclient \
-    libxml2 \
-    nginx \
-    php7 \
-    php7-apcu \
-    php7-bcmath \
-    php7-bz2 \
-    php7-cli \
-    php7-ctype \
-    php7-curl \
-    php7-dom \
-    php7-exif \
-    php7-fileinfo \
-    php7-fpm \
-    php7-ftp \
-    php7-gd \
-    php7-gmp \
-    php7-iconv \
-    php7-imagick \
-    php7-intl \
-    php7-json \
-    php7-ldap \
-    php7-mbstring \
-    php7-mcrypt \
-    php7-memcached \
-    php7-opcache \
-    php7-openssl \
-    php7-pcntl \
-    php7-pdo \
-    php7-pdo_mysql \
-    php7-pdo_pgsql \
-    php7-pdo_sqlite \
-    php7-posix \
-    php7-redis \
-    php7-session \
-    php7-simplexml \
-    php7-sqlite3 \
-    php7-xml \
-    php7-xmlreader \
-    php7-xmlwriter \
-    php7-zip \
-    php7-zlib \
-    python3 \
-    py3-pip \
-    su-exec \
-    tzdata \
+  bash \
+  ca-certificates \
+  curl \
+  ffmpeg \
+  imagemagick \
+  libressl \
+  libsmbclient \
+  libxml2 \
+  nginx \
+  php7 \
+  php7-apcu \
+  php7-bcmath \
+  php7-bz2 \
+  php7-cli \
+  php7-ctype \
+  php7-curl \
+  php7-dom \
+  php7-exif \
+  php7-fileinfo \
+  php7-fpm \
+  php7-ftp \
+  php7-gd \
+  php7-gmp \
+  php7-iconv \
+  php7-imagick \
+  php7-intl \
+  php7-json \
+  php7-ldap \
+  php7-mbstring \
+  php7-mcrypt \
+  php7-memcached \
+  php7-opcache \
+  php7-openssl \
+  php7-pcntl \
+  php7-pdo \
+  php7-pdo_mysql \
+  php7-pdo_pgsql \
+  php7-pdo_sqlite \
+  php7-posix \
+  php7-redis \
+  php7-session \
+  php7-simplexml \
+  php7-sqlite3 \
+  php7-xml \
+  php7-xmlreader \
+  php7-xmlwriter \
+  php7-zip \
+  php7-zlib \
+  python3 \
+  py3-pip \
+  su-exec \
+  tzdata \
   && apk --update --no-cache add -t build-dependencies \
-    autoconf \
-    automake \
-    build-base \
-    libtool \
-    pcre-dev \
-    php7-dev \
-    php7-pear \
-    samba-dev \
-    tar \
-    wget \
+  autoconf \
+  automake \
+  build-base \
+  libtool \
+  pcre-dev \
+  php7-dev \
+  php7-pear \
+  samba-dev \
+  tar \
+  wget \
   && cd /tmp \
   && wget -q https://pecl.php.net/get/smbclient-1.0.0.tgz \
   && pecl install smbclient-1.0.0.tgz \
   && S6_ARCH=$(case ${TARGETPLATFORM:-linux/amd64} in \
-    "linux/amd64")   echo "amd64"   ;; \
-    "linux/arm/v6")  echo "arm"     ;; \
-    "linux/arm/v7")  echo "armhf"   ;; \
-    "linux/arm64")   echo "aarch64" ;; \
-    "linux/386")     echo "x86"     ;; \
-    "linux/ppc64le") echo "ppc64le" ;; \
-    *)               echo ""        ;; esac) \
+  "linux/amd64")   echo "amd64"   ;; \
+  "linux/arm/v6")  echo "arm"     ;; \
+  "linux/arm/v7")  echo "armhf"   ;; \
+  "linux/arm64")   echo "aarch64" ;; \
+  "linux/386")     echo "x86"     ;; \
+  "linux/ppc64le") echo "ppc64le" ;; \
+  *)               echo ""        ;; esac) \
   && echo "S6_ARCH=$S6_ARCH" \
   && wget -q "https://github.com/just-containers/s6-overlay/releases/latest/download/s6-overlay-${S6_ARCH}.tar.gz" -qO "/tmp/s6-overlay-${S6_ARCH}.tar.gz" \
   && tar xzf /tmp/s6-overlay-${S6_ARCH}.tar.gz -C / \
@@ -107,8 +107,19 @@ ENV  S6_BEHAVIOUR_IF_STAGE2_FAILS="2" \
   PUID="1000" \
   PGID="1000"
 
+RUN apk --update --no-cache add \
+  aria2 \
+  p7zip \
+  unrar \
+  youtube-dl\
+  && mkdir /var/log/aria2c \
+  && mkdir /var/local/aria2c \
+  && touch /var/log/aria2c/aria2c.log \
+  && touch /var/local/aria2c/aria2c.sess \
+  && aria2c --enable-rpc --rpc-allow-origin-all -c -D --log=/var/log/aria2c/aria2c.log --check-certificate=false --save-session=/var/local/aria2c/aria2c.sess --save-session-interval=2 --continue=true --input-file=/var/local/aria2c/aria2c.sess --rpc-save-upload-metadata=true --force-save=true --log-level=warn
+
 RUN apk --update --no-cache add -t build-dependencies \
-    gnupg \
+  gnupg \
   && pip3 install --upgrade pip \
   && pip3 install nextcloud_news_updater --install-option="--install-scripts=/usr/bin" \
   && cd /tmp \
