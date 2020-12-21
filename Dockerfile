@@ -120,8 +120,6 @@ RUN apk --update --no-cache add \
 
 RUN apk --update --no-cache add -t build-dependencies \
   gnupg \
-  && pip3 install --upgrade pip \
-  && pip3 install nextcloud_news_updater --install-option="--install-scripts=/usr/bin" \
   && cd /tmp \
   && curl -SsOL https://download.nextcloud.com/server/releases/nextcloud-${NEXTCLOUD_VERSION}.tar.bz2 \
   && curl -SsOL https://download.nextcloud.com/server/releases/nextcloud-${NEXTCLOUD_VERSION}.tar.bz2.asc \
