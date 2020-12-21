@@ -121,8 +121,8 @@ RUN apk --update --no-cache add \
 RUN apk --update --no-cache add -t build-dependencies \
   gnupg \
   && cd /tmp \
-  && curl -SsOL https://download.nextcloud.com/server/releases/nextcloud-${NEXTCLOUD_VERSION}.tar.bz2 \
-  && curl -SsOL https://download.nextcloud.com/server/releases/nextcloud-${NEXTCLOUD_VERSION}.tar.bz2.asc \
+  && curl -SsOL https://github.com/nextcloud/server/releases/download/v20.0.4/nextcloud-${NEXTCLOUD_VERSION}.tar.bz2 \
+  && curl -SsOL https://github.com/nextcloud/server/releases/download/v20.0.4/nextcloud-${NEXTCLOUD_VERSION}.tar.bz2.asc \
   && curl -SsOL https://nextcloud.com/nextcloud.asc \
   && gpg --import nextcloud.asc \
   && gpg --verify --batch --no-tty nextcloud-${NEXTCLOUD_VERSION}.tar.bz2.asc nextcloud-${NEXTCLOUD_VERSION}.tar.bz2 \
