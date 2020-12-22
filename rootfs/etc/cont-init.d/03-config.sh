@@ -30,6 +30,7 @@ file_env() {
 TZ=${TZ:-UTC}
 MEMORY_LIMIT=${MEMORY_LIMIT:-512M}
 UPLOAD_MAX_SIZE=${UPLOAD_MAX_SIZE:-512M}
+CLEAR_ENV=${CLEAR_ENV:-yes}
 OPCACHE_MEM_SIZE=${OPCACHE_MEM_SIZE:-128}
 LISTEN_IPV6=${LISTEN_IPV6:-true}
 APC_SHM_SIZE=${APC_SHM_SIZE:-128M}
@@ -58,6 +59,7 @@ echo ${TZ} > /etc/timezone
 echo "Setting PHP-FPM configuration..."
 sed -e "s/@MEMORY_LIMIT@/$MEMORY_LIMIT/g" \
   -e "s/@UPLOAD_MAX_SIZE@/$UPLOAD_MAX_SIZE/g" \
+  -e "s/@CLEAR_ENV@/$CLEAR_ENV/g" \
   /tpls/etc/php7/php-fpm.d/www.conf > /etc/php7/php-fpm.d/www.conf
 
 # PHP
@@ -139,6 +141,20 @@ EOL
     'logtimezone' => '${TZ}',
     'logdateformat' => 'Y-m-d H:i:s',
     'memcache.local' => '\\\OC\\\Memcache\\\APCu',
+    'objectstore' => array(
+        'class' => '\\OC\\Files\\ObjectStore\\S3',
+        'arguments' => array(
+                'bucket' => '${OBJECTSTORE_S3_BUCKET}',
+                'autocreate' => false,
+                'key'    => '${OBJECTSTORE_S3_KEY}',
+                'secret' => '${OBJECTSTORE_S3_SECRET}',
+                'hostname' => '${OBJECTSTORE_S3_HOST}',
+                'port' => '${OBJECTSTORE_S3_PORT}',
+                'use_ssl' => '${OBJECTSTORE_S3_SSL}',
+                'region' => '${OBJECTSTORE_S3_REGION}',
+                'use_path_style'=>'${OBJECTSTORE_S3_USEPATH_STYLE}'
+        ),
+    ),
     'apps_paths' => array(
         array(
             'path'=> '/var/www/apps',
