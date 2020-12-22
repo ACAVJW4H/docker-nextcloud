@@ -149,10 +149,10 @@ EOL
                 'key'    => '${OBJECTSTORE_S3_KEY}',
                 'secret' => '${OBJECTSTORE_S3_SECRET}',
                 'hostname' => '${OBJECTSTORE_S3_HOST}',
-                'port' => '${OBJECTSTORE_S3_PORT}',
-                'use_ssl' => '${OBJECTSTORE_S3_SSL}',
+                'port' => ${OBJECTSTORE_S3_PORT},
+                'use_ssl' => ${OBJECTSTORE_S3_SSL},
                 'region' => '${OBJECTSTORE_S3_REGION}',
-                'use_path_style'=>'${OBJECTSTORE_S3_USEPATH_STYLE}'
+                'use_path_style'=>${OBJECTSTORE_S3_USEPATH_STYLE}
         ),
     ),
     'apps_paths' => array(
