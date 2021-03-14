@@ -1,4 +1,4 @@
-FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine:3.12
+FROM --platform=${TARGETPLATFORM:-linux/amd64} alpine:latest
 
 ARG BUILD_DATE
 ARG VCS_REF
@@ -102,7 +102,7 @@ RUN apk --update --no-cache add \
   && rm -rf /tmp/* /var/cache/apk/* /var/www/*
 
 ENV  S6_BEHAVIOUR_IF_STAGE2_FAILS="2" \
-  NEXTCLOUD_VERSION="20.0.4" \
+  NEXTCLOUD_VERSION="21.0.0" \
   TZ="UTC" \
   PUID="1000" \
   PGID="1000"
@@ -115,19 +115,18 @@ RUN apk --update --no-cache add \
   && mkdir /var/log/aria2c \
   && mkdir /var/local/aria2c \
   && touch /var/log/aria2c/aria2c.log \
-  && touch /var/local/aria2c/aria2c.sess \
-  && aria2c --enable-rpc --rpc-allow-origin-all -c -D --log=/var/log/aria2c/aria2c.log --check-certificate=false --save-session=/var/local/aria2c/aria2c.sess --save-session-interval=2 --continue=true --input-file=/var/local/aria2c/aria2c.sess --rpc-save-upload-metadata=true --force-save=true --log-level=warn
+  && touch /var/local/aria2c/aria2c.sess
 
 RUN apk --update --no-cache add -t build-dependencies \
   gnupg \
   && cd /tmp \
-  && curl -SsOL https://github.com/nextcloud/server/releases/download/v20.0.4/nextcloud-${NEXTCLOUD_VERSION}.tar.bz2 \
-  && curl -SsOL https://github.com/nextcloud/server/releases/download/v20.0.4/nextcloud-${NEXTCLOUD_VERSION}.tar.bz2.asc \
+  && curl -SsOL https://download.nextcloud.com/server/releases/nextcloud-21.0.0.tar.bz2 \
+  && curl -SsOL https://download.nextcloud.com/server/releases/nextcloud-21.0.0.tar.bz2.asc \
   && curl -SsOL https://nextcloud.com/nextcloud.asc \
   && gpg --import nextcloud.asc \
-  && gpg --verify --batch --no-tty nextcloud-${NEXTCLOUD_VERSION}.tar.bz2.asc nextcloud-${NEXTCLOUD_VERSION}.tar.bz2 \
-  && tar -xjf nextcloud-${NEXTCLOUD_VERSION}.tar.bz2 --strip 1 -C /var/www \
-  && rm -f nextcloud-${NEXTCLOUD_VERSION}.tar* nextcloud.asc \
+  && gpg --verify --batch --no-tty nextcloud-21.0.0.tar.bz2.asc nextcloud-21.0.0.tar.bz2 \
+  && tar -xjf nextcloud-21.0.0.tar.bz2 --strip 1 -C /var/www \
+  && rm -f nextcloud-21.0.0.tar* nextcloud.asc \
   && chown -R nobody.nogroup /var/www \
   && apk del build-dependencies \
   && rm -rf /root/.gnupg /tmp/* /var/cache/apk/* /var/www/updater
